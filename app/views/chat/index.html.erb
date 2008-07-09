@@ -1,0 +1,43 @@
+
+<%= juggernaut :host => "10.33.1.44", :channels => ["one", "two"] %>
+
+<%= session[:login] %> | 
+<%= link_to_remote "logout", :url => { :action => "logout" } %>
+
+<br>
+<ul id="user_list"></ul>
+
+<div class="chat" >
+<ul id="chat_data_one" style="list-style:none; padding:0 0 5px 5px;"></ul>
+<a name="bottom"></a>
+</div>
+
+<%= form_remote_tag(
+  :url => { :action => :send_data },
+  :complete => "$('chat_input').value = ''" ) %>
+  <%= text_field_tag( 'chat_input', '', { :size => 60, :id => 'chat_input'} ) %>
+  <%= hidden_field_tag 'channel', 'one' %>
+  <%= submit_tag "Add" %>
+</form>
+
+
+<%= observe_field :chat_input, :url => { :action => :is_typing },
+  :frequency => 0.25,
+  :update => :suggest,
+  :with => 'q'
+%>
+
+<div id="suggest"></div>
+
+
+<script type="text/javascript" >
+  
+  new PeriodicalExecuter(function() {
+    $('suggest').innerHTML = "";
+    $('suggest').textContent = "";
+    }, 2);
+
+</script>
+
+
+

@@ -1,0 +1,12 @@
+<h1>Editing boot</h1>
+
+<% form_for(@boot) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @boot %> |
+<%= link_to 'Back', boots_path %>
