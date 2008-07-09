@@ -14,7 +14,7 @@ class ChatController < ApplicationController
   def send_data
     unless params[:chat_input].empty?
       channel = [params[:channel]]
-      message = "<li> <b>#{session[:login]}</b>: #{params[:chat_input]}</li>"  
+      message = "<div id='msg'> <b>#{session[:login]}</b>: #{params[:chat_input]}</div>"  
       render :juggernaut => {:type => :send_to_channels, :channels => channel }  do |page|
         page.replace_html "suggest", ""
         page.insert_html :bottom, "chat_data_#{channel.first}", message
@@ -31,10 +31,11 @@ class ChatController < ApplicationController
   end
 
   def logout    
-    message = "<i>#{session[:login]} has logout</i>"
+    message = "<div id='alert'>#{session[:login]} has logout</div>"
     session[:login] = nil
     render :juggernaut => {:type => :send_to_all }  do |page|
       page.insert_html :bottom, "chat_data_one", message
+      page << 'window.location.href = "#bottom"'
     end
     render :update do |page|
       page << "window.location = 'chat/login'"
