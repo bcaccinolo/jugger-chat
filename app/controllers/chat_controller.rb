@@ -22,13 +22,25 @@ class ChatController < ApplicationController
   end
 
   def login
-    session[:login] = params[:session_login] if request.post?
+    if request.post?
+      session[:login] = params[:session_login]     
+      User.create(:login => session[:login], :session_id => session.id)
+    end
     redirect_to :action => "index" unless session[:login].nil?
   end
 
   def logout    
     message = "<div id='alert'>#{session[:login]} has logout</div>"
+    u = User.find_by_login session[:login]
+    u.destroy unless u.nil?
     session[:login] = nil
+
+    us = User.find :all
+    users = us.map { |u| "<div class='user'>" + u .login + "</div>" }.join ' '
+    render :juggernaut => {:type => :send_to_all }  do |page|
+      page.replace_html "user_list", users
+    end
+
     render :juggernaut => {:type => :send_to_all }  do |page|
       page.insert_html :bottom, "chat_data_one", message
       page << 'window.location.href = "#bottom"'
@@ -48,8 +60,11 @@ class ChatController < ApplicationController
   end
 
   def get_users
+    us = User.find :all
+    users = us.map { |u| "<div class='user'>" + u .login + "</div>" }.join ' '
     render :juggernaut => {:type => :send_to_all }  do |page|
-      page.insert_html :bottom, "user_list", "new user"
+      page << '$("chat_input").focus()'
+      page.replace_html "user_list", users
     end
     render :nothing => true
   end

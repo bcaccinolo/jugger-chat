@@ -1,17 +1,30 @@
 body { background-color: #fff; color: #333; }
 
+#user_list {
+  border: 1px solid black;
+  width: 150px;
+  padding: 5px;
+  float:left;
+}
+
+.right_part {
+  border: 0px solid black;
+  width: 500px; 
+  padding-left: 10px;
+  float:left;
+}
+
 .chat {
   background-color:azure;
   border:1px solid black;
   height:150px;
   width: 450px;
-  margin:10px 10px 5px 10px;
+  margin:0px 10px 5px 0;
   overflow-x:hidden;
   overflow-y:auto
 }
 
 #chat_input {
-  margin: 0 0 0 10px;
   width: 393px;
 }
 
