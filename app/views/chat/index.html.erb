@@ -15,7 +15,7 @@
 <%= form_remote_tag(
   :url => { :action => :send_data },
   :complete => "$('chat_input').value = ''" ) %>
-  <%= text_field_tag( 'chat_input', '', { :size => 60, :id => 'chat_input'} ) %>
+  <%= text_field_tag( 'chat_input', '', { :size => 60, :id => 'chat_input', :autocomplete => "off"} ) %>
   <%= hidden_field_tag 'channel', 'one' %>
   <%= submit_tag "Add" %>
 </form>
