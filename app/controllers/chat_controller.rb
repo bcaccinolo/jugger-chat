@@ -5,10 +5,6 @@ class ChatController < ApplicationController
       redirect_to :action => "login"
     end
 
-    # render :juggernaut => {:type => :send_to_all }  do |page|
-    #  page.insert_html :bottom, "user_list", "coucou"
-    # end
-
   end
 
   def send_data
@@ -47,6 +43,13 @@ class ChatController < ApplicationController
     render :juggernaut => {:type => :send_to_all }  do |page|
       page.replace_html "suggest", "Someone is typing"
     end
+    end
+    render :nothing => true
+  end
+
+  def get_users
+    render :juggernaut => {:type => :send_to_all }  do |page|
+      page.insert_html :bottom, "user_list", "new user"
     end
     render :nothing => true
   end

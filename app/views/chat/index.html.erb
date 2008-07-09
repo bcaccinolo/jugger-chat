@@ -1,6 +1,5 @@
 
-<%= juggernaut :host => "10.33.1.44", :channels => ["one", "two"] %>
-
+<%= juggernaut :host => "10.33.1.44", :channels => ["one"], :client_id => session.id %>
 
 <%= session[:login] %> | 
 <%= link_to_remote "logout", :url => { :action => "logout" } %>
@@ -9,8 +8,8 @@
 <ul id="user_list"></ul>
 
 <div class="chat" >
-<div id="chat_data_one" style="list-style:none; padding:0 0 5px 5px;"></div>
-<a name="bottom"></a>
+  <div id="chat_data_one" style="list-style:none; padding:0 0 5px 5px;"></div>
+  <a name="bottom"></a>
 </div>
 
 <%= form_remote_tag(
@@ -21,7 +20,6 @@
   <%= submit_tag "Add" %>
 </form>
 
-
 <%= observe_field :chat_input, :url => { :action => :is_typing },
   :frequency => 0.25,
   :update => :suggest,
@@ -30,13 +28,19 @@
 
 <div id="suggest"></div>
 
-
 <script type="text/javascript" >
   
   new PeriodicalExecuter(function() {
     $('suggest').innerHTML = "";
     $('suggest').textContent = "";
-    }, 2);
+  }, 2);
+
+  new PeriodicalExecuter(function(pe) {
+    if(jugg.is_connected == true) {
+    new Ajax.Request("/chat/get_users", {parameters:'authenticity_token=' + encodeURIComponent( $(document.body.select('input[name="authenticity_token"]')[0]).value )});
+      pe.stop();
+    }
+  }, 1);
 
 </script>
 
