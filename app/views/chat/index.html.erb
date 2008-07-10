@@ -5,21 +5,27 @@
 <%= link_to_remote "logout", :url => { :action => "logout" } %>
 
 <br>
-<div id="user_list"></div>
 
-<div class="right_part" >
-<div class="chat" >
-  <div id="chat_data_one" style="list-style:none; padding:0 0 5px 5px;"></div>
-  <a name="bottom"></a>
-</div>
+<div id="info_message">Connecting </div>
 
-<%= form_remote_tag(
-  :url => { :action => :send_data },
-  :complete => "$('chat_input').value = ''" ) %>
-  <%= text_field_tag( 'chat_input', '', { :size => 60, :id => 'chat_input', :autocomplete => "off"} ) %>
-  <%= hidden_field_tag 'channel', 'one' %>
-  <%= submit_tag "Add" %>
-</form>
+<div id="main_window" style="display:none; " >
+  <div id="user_list"></div>
+
+  <div class="right_part" >
+    <div class="chat" >
+      <div id="chat_data_one" style="list-style:none; padding:0 0 5px 5px;"></div>
+      <a name="bottom"></a>
+    </div>
+
+    <%= form_remote_tag(
+      :url => { :action => :send_data },
+      :complete => "$('chat_input').value = ''" ) %>
+      <%= text_field_tag( 'chat_input', '', { :size => 60, :id => 'chat_input', :autocomplete => "off"} ) %>
+      <%= hidden_field_tag 'channel', 'one' %>
+      <%= submit_tag "Add" %>
+    </form>
+
+  </div>
 
 <%= observe_field :chat_input, :url => { :action => :is_typing },
   :frequency => 0.25,
@@ -38,11 +44,20 @@
     $('suggest').innerHTML = "";
     $('suggest').textContent = "";
   }, 2);
+ 
+
+  var times = 0;
 
   new PeriodicalExecuter(function(pe) {
     if(jugg.is_connected == true) {
     new Ajax.Request("/chat/get_users", {parameters:'authenticity_token=' + encodeURIComponent( $(document.body.select('input[name="authenticity_token"]')[0]).value )});
       pe.stop();
+      $('info_message').hide();
+      $('main_window').show();
+    }
+    times = times +1;
+    if (times >= 5) {
+      window.location = "/chat/logout?indispo=true";
     }
   }, 1);
 

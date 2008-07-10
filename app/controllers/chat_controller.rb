@@ -4,7 +4,6 @@ class ChatController < ApplicationController
     if session[:login].nil?
       redirect_to :action => "login"
     end
-
   end
 
   def send_data
@@ -35,6 +34,11 @@ class ChatController < ApplicationController
     u.destroy unless u.nil?
     session[:login] = nil
 
+  unless params[:indispo].nil?
+    render :template => "chat/indispo"
+  else
+
+
     us = User.find :all
     users = us.map { |u| "<div class='user'>" + u .login + "</div>" }.join ' '
     render :juggernaut => {:type => :send_to_all }  do |page|
@@ -48,6 +52,8 @@ class ChatController < ApplicationController
     render :update do |page|
       page << "window.location = 'chat/login'"
     end
+  end
+
   end
 
   def is_typing
